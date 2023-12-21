@@ -4,15 +4,40 @@ defmodule Round do
   def is_valid(%Round{red: r, green: g, blue: b}) do
     r <= 12 && g <= 13 && b <= 14
   end
+
+  def add(round, %Round{red: r, green: g, blue: b}) do
+    %Round{
+      red: round.red + r,
+      green: round.green + g,
+      blue: round.blue + b
+    }
+  end
+
+  def maximum(round, %Round{red: r, green: g, blue: b}) do
+    %Round{
+      red: max(round.red, r),
+      green: max(round.green, g),
+      blue: max(round.blue, b)
+    }
+  end
+
+  def score(%Round{red: r, green: g, blue: b}) do
+    r * g * b
+  end
 end
 
 defmodule Game do
   defstruct level: 0, rounds: []
 
   def is_valid(game) do
-    # game.rounds |> Enum.reduce(%{red}, fn r, acc -> acc end)
     game.rounds
     |> Enum.all?(&Round.is_valid/1)
+  end
+
+  def power(game) do
+    game.rounds
+    |> Enum.reduce(&Round.maximum(&1, &2))
+    |> Round.score()
   end
 end
 
@@ -22,10 +47,22 @@ defmodule Day2 do
   def part_one(content) do
     content
     |> String.split("\n")
-    |> reverse() |> tl()
+    |> reverse()
+    |> tl()
     |> map(&parse_game/1)
     |> filter(&Game.is_valid/1)
     |> map(fn g -> g.level end)
+    |> sum()
+    |> IO.inspect()
+  end
+
+  def part_two(content) do
+    content
+    |> String.split("\n")
+    |> reverse()
+    |> tl()
+    |> map(&parse_game/1)
+    |> map(&Game.power/1)
     |> sum()
     |> IO.inspect()
   end
