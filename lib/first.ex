@@ -28,7 +28,39 @@ defmodule Day1 do
     # IO.puts(content)
   end
 
-  
+  def part_two(content) do
+    content
+    |> String.split("\n")
+    |> map(fn l -> 
+      parse_str(l) |> String.to_charlist |> hd_last()
+    end)
+    |> sum
+    |> IO.inspect
+  end
+
+  defp parse_str("") do
+    <<>>
+  end
+
+  defp parse_str("one" <> rest), do: "1" <> parse_str("e" <> rest)
+  defp parse_str("two" <> rest), do: "2" <> parse_str("o" <> rest)
+  defp parse_str("three" <> rest), do: "3" <> parse_str("e" <> rest)
+  defp parse_str("four" <> rest), do: "4" <> parse_str("r" <> rest)
+  defp parse_str("five" <> rest), do: "5" <> parse_str("e" <> rest)
+  defp parse_str("six" <> rest), do: "6" <> parse_str("x" <> rest)
+  defp parse_str("seven" <> rest), do: "7" <> parse_str("n" <> rest)
+  defp parse_str("eight" <> rest), do: "8" <> parse_str("t" <> rest)
+  defp parse_str("nine" <> rest), do: "9" <> parse_str("e" <> rest)
+  defp parse_str("zero" <> rest), do: "0" <> parse_str("o" <> rest)
+
+  defp parse_str(<<c, rest::binary>>) do
+    if c >= 48 && c <= 57 do
+      <<c>> <> parse_str(rest)
+    else
+      parse_str(rest)
+    end
+  end
+
   defp hd_last([]) do
     0
   end

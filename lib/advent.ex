@@ -19,7 +19,7 @@ defmodule Advent do
   def start do
     content = File.read!("text/day1.txt")
 
-    Day1.run(content)
+    Day1.part_two(content)
   end
 end
 
